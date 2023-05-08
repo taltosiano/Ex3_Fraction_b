@@ -265,8 +265,7 @@ Fraction Fraction::operator++(int) {
     return temp;
 }
 Fraction &Fraction::operator++() {
-    
-     this->numerator  += this->denominator;
+    this->numerator  += this->denominator;
     return *this;
 }
 
@@ -288,7 +287,6 @@ ostream& operator<<(std::ostream& os, const Fraction& frac) {
 
 // The >> operator to read a fraction from an input stream by taking two integers as input.
 istream& operator>>(std::istream& is, Fraction& frac) {
-
     is >> frac.numerator >> frac.denominator;
     if(!is){  
         throw runtime_error("error: invalid input");
