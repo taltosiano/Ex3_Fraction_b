@@ -19,8 +19,7 @@ public:
     int getNumerator() const;
     void setNumerator(int) ;
     int getDenominator() const;
-    void setDenominator(int) ;
-    
+    void setDenominator(int) ;    
     Fraction operator+(const Fraction& other);
     Fraction operator+(float other);
 
