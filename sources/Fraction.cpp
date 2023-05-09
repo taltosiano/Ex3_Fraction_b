@@ -22,14 +22,14 @@ Fraction::Fraction(int numerator, int denominator){
         numerator = 0;
         denominator = 1;
      }
-    this->numerator = numerator;
-    this->denominator = denominator;
+    this->setNumerator(numerator);
+    this->setDenominator(denominator);
     reduce();
 }
 Fraction::Fraction(float num) {
     // convert the float to a fraction
-    this->numerator = static_cast<int>(num * 1000);
-    this->denominator = 1000;
+    this->setNumerator(num * 1000);
+    this->setDenominator(1000);
     reduce();
     }
 
@@ -64,14 +64,14 @@ void Fraction::setDenominator(int n) {
 Fraction Fraction::operator+(const Fraction& other){
     int max_int = numeric_limits<int>::max();
     int min_int = numeric_limits<int>::min();
-    if ((this->numerator == max_int && this->denominator != max_int)
-            || (this->numerator <= min_int + 100 && other.numerator <= min_int + 100)
-            || (other.numerator == max_int && other.denominator != max_int))
+    if ((this->getNumerator() == max_int && this->getDenominator() != max_int)
+            || (this->getNumerator() <= min_int + 1 && other.getNumerator() <= min_int + 1)
+            || (other.getNumerator() == max_int && other.getDenominator() != max_int))
             {
                throw overflow_error("Overflow");
             }
-    int mone = numerator * other.denominator + other.numerator * denominator;
-    int mehane = denominator * other.denominator;
+    int mone = getNumerator() * other.getDenominator() + other.getNumerator() * getDenominator();
+    int mehane = getDenominator() * other.getDenominator();
     return Fraction(mone, mehane);
 }
 Fraction Fraction::operator+(float other){
@@ -91,8 +91,8 @@ Fraction operator+(float f, const Fraction& other){          //friend
 Fraction Fraction::operator-(const Fraction& other){
     int max_int = numeric_limits<int>::max();
     int min_int = numeric_limits<int>::min();
-    if ((this->numerator <= min_int + 100 && other.numerator <= min_int + 100)
-            || (this->numerator >= max_int - 100 && other.numerator <= min_int + 100))
+    if ((this->getNumerator() <= min_int + 1 && other.getNumerator() <= min_int + 1)
+            || (this->getNumerator() >= max_int - 1 && other.getNumerator() <= min_int + 1))
             {
                 throw overflow_error("Overflow");
             }
@@ -101,18 +101,12 @@ Fraction Fraction::operator-(const Fraction& other){
     return Fraction(mone, mehane);
 }
 Fraction Fraction::operator-(float other){
-    if(other == 0){
-        return *this;
-    }
     Fraction f1(other);
     int mone = numerator * f1.denominator - f1.numerator * denominator;
     int mehane = denominator * f1.denominator;
     return Fraction(mone, mehane);
 }
 Fraction operator-(float f, const Fraction& other){          //friend 
-    if(f == 0){
-        return Fraction(-other.numerator, other.denominator);
-    }
     Fraction f1(f);
     int mone = f1.numerator * other.denominator - other.numerator * f1.denominator;
     int mehane = other.denominator * f1.denominator;
@@ -122,9 +116,9 @@ Fraction operator-(float f, const Fraction& other){          //friend
 // The * operator to multiply two fractions and return their product as another fraction in reduced form.
 Fraction Fraction::operator*(const Fraction& other){
       int max_int = numeric_limits<int>::max();
-    if  ((this->numerator == max_int && this->denominator != max_int)
-            || (this->denominator == max_int && this->numerator != max_int)
-            || (other.numerator == max_int && other.denominator != max_int))
+    if  ((this->getNumerator() == max_int && this->getDenominator() != max_int)
+            || (this->getDenominator() == max_int && this->getNumerator() != max_int)
+            || (other.getNumerator() == max_int && other.getDenominator() != max_int))
             {
                 throw overflow_error("Overflow");
             }
@@ -148,8 +142,8 @@ Fraction Fraction::operator/(const Fraction& other){
         throw::runtime_error("Can't divide by zero");
     }
     int max_int = numeric_limits<int>::max();
-    if ((this->denominator == max_int && this->numerator < max_int - 100)
-            || (this->numerator == max_int && this->denominator != max_int)){
+    if ((this->getDenominator() == max_int && this->getNumerator() < max_int - 100)
+            || (this->getNumerator() == max_int && this->getDenominator() != max_int)){
                 throw overflow_error("Overflow");
             }
     return Fraction(this->numerator * other.denominator, this->denominator * other.numerator);
@@ -164,29 +158,20 @@ Fraction Fraction::operator/(float other){
 
 }
 Fraction operator/(float f, const Fraction& other){          //friend 
-    // if(other.getNumerator() == 0){
-    //     throw::runtime_error("Can't divide by zero");
-    // }
-    // if(f == 0 || f == 0.0){
-    //    return Fraction(0, 0);
-    // }
-    // Fraction nEw(f);
-    // return Fraction(nEw.numerator*other.denominator, nEw.denominator*other.numerator);
-
      Fraction f1(f);
      return f1/other;
 }
 
 // The == operator to compare two fractions for equality and return true or false.
 bool Fraction::operator==(const Fraction& other) const{
-    if(this->numerator == 0 && other.numerator == 0){
+    if(this->getNumerator() == 0 && other.getNumerator() == 0){
         return true;
     }
-    return (numerator == other.numerator) && (denominator == other.denominator);
+    return (this->getNumerator() == other.getNumerator()) && (this->getDenominator() == other.getDenominator());
 
 }
 bool Fraction::operator==(float other) const{
-    if(this->numerator == 0 && other == 0){
+    if(this->getNumerator() == 0 && other == 0){
         return true;
     }
     float result = (float)numerator / (float)denominator;
@@ -194,7 +179,7 @@ bool Fraction::operator==(float other) const{
 
 }
 bool operator==(float f, const Fraction& other) {          //friend 
-    if(other.numerator == 0 && f == 0){
+    if(other.getNumerator() == 0 && f == 0){
         return true;
     }
     float result = (float)other.numerator / (float)other.denominator;
@@ -281,7 +266,7 @@ Fraction Fraction::operator--(){
 
 // The << operator to print a fraction to an output stream in the format “numerator/denominator”.
 ostream& operator<<(std::ostream& os, const Fraction& frac) {
-    os << frac.numerator << "/" << frac.denominator;
+    os << frac.getNumerator() << "/" << frac.getDenominator();
     return os;
 }
 
@@ -291,12 +276,12 @@ istream& operator>>(std::istream& is, Fraction& frac) {
     if(!is){  
         throw runtime_error("error: invalid input");
     }
-    if (frac.denominator == 0){
+    if (frac.getDenominator() == 0){
         throw runtime_error("denominator can't be zero");
     }
-    if (frac.denominator < 0) {
-            frac.numerator *= -1;
-            frac.denominator *= -1;
+    if (frac.getDenominator() < 0) {
+        frac.setNumerator(frac.getNumerator() * -1); 
+        frac.setDenominator(frac.getDenominator() * -1); 
     }    
     return is;
 }
